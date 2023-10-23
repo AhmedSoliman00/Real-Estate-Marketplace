@@ -20,5 +20,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema); // it will create collection with name users (plural of User)
+// const User = mongoose.model("User", userSchema, "myusers"); // it will create collection with name myusers
 export default User;
