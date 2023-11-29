@@ -16,8 +16,8 @@ app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
 
-app.use("/api/user", userRouter);
-app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter); // check in the user router file
+app.use("/api/auth", authRouter); // check in the auth router file
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

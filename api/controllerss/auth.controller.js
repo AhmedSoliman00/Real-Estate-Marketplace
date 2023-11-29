@@ -11,6 +11,6 @@ export const signup = async (req, res,next) => {
     res.status(201).json("User created successfully");
   }
   catch(error){
-    next(error);
+    next(error); // it will passed to the next middleware in index.js
   }
 };

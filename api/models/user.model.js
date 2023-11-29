@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true } // to record the time
 );
 
 const User = mongoose.model("User", userSchema); // it will create collection with name users (plural of User)
