@@ -17,8 +17,7 @@ app.listen(3000, () => {
 });
 
 app.use("/api/user", userRouter); // any request that starts with /api/user will be handled by userRouter
-app.use("/api/auth", authRouter); 
-
+app.use("/api/auth", authRouter);
 
 /* 
 
@@ -40,5 +39,3 @@ app.use((err, req, res, next) => {
     message,
   });
 });
-
-
