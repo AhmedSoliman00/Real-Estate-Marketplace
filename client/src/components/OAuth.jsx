@@ -3,7 +3,7 @@ import { app } from "../firebase";
 import { useDispatch } from "react-redux";
 import { signInSuccess } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
-import { errorHandler } from './../../../api/utils/error';
+import { errorHandler } from "./../../../api/utils/error";
 
 function OAuth() {
   const dispatch = useDispatch();
@@ -14,7 +14,6 @@ function OAuth() {
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider); // Added await here
       console.log(result);
-      console.log(result.user.email)
       const res = await fetch("/api/auth/google", {
         method: "POST",
         headers: {
@@ -30,7 +29,7 @@ function OAuth() {
       console.log(data);
       dispatch(signInSuccess(data));
       navigate("/");
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
   }

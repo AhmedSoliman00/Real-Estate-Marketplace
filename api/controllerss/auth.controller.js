@@ -44,6 +44,7 @@ export const google = async (req, res, next) => {
         .status(200)
         .json(rest);
     } else {
+      // genereate random password because google does not provide password
       const generatedPass = Math.random().toString(36).slice(-8); //36 means number from 0 to 9 and letters from a to z
       const hashedPassword = bcryptjs.hashSync(generatedPass, 10);
       const newUser = new User({
