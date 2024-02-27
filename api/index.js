@@ -3,10 +3,12 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRouter from "./routes/user.route.js"; // rename the file to userRouter
 import authRouter from "./routes/auth.route.js";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app = express();
 app.use(express.json()); // to allow json data to be passed in the body of the request
+app.use(cookieParser());
 
 mongoose.connect(process.env.MONGO).then(() => {
   console.log("MongoDB connected");

@@ -8,6 +8,12 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "./../firebase";
+import { useDispatch } from "react-redux";
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+} from "../redux/user/userSlice.js";
 
 //  firebase storage
 //   allow read;
@@ -16,16 +22,50 @@ import { app } from "./../firebase";
 //   request.resource.contentType.matches('image/.*')
 
 function Profile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
   const fileref = useRef(null);
+  const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [updatedSuccess, setUpdatedSuccess] = useState(false);
   console.log(filePerc);
   console.log(fileUploadError);
   console.log(formData);
   console.log(filePerc);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+  console.log(formData);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+
+      dispatch(updateUserSuccess(data));
+      setUpdatedSuccess(true);
+    } catch (err) {
+      dispatch(updateUserFailure(err.message));
+    }
+  };
 
   useEffect(() => {
     if (file) {
@@ -46,6 +86,7 @@ function Profile() {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setFilePerc(Math.round(progress));
       },
+      // eslint-disable-next-line no-unused-vars
       (error) => {
         setFileUploadError(true);
       },
@@ -59,7 +100,7 @@ function Profile() {
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold my-7">Profile</h1>
-      <form className="gap-4 flex flex-col">
+      <form onSubmit={handleSubmit} className="gap-4 flex flex-col">
         <input
           onChange={(e) => setFile(e.target.files[0])}
           className="hidden"
@@ -91,12 +132,16 @@ function Profile() {
         <input
           className="p-3 rounded-lg border border-gray-300 focus:outline-orange-200 outline-1"
           type="text"
+          defaultValue={currentUser.username}
+          onChange={handleChange}
           placeholder="username"
           id="username"
         />
         <input
           className="p-3 rounded-lg border border-gray-300 focus:outline-orange-200"
           type="email"
+          defaultValue={currentUser.email}
+          onChange={handleChange}
           placeholder="email"
           id="email"
         />
@@ -104,11 +149,19 @@ function Profile() {
           className="p-3 rounded-lg border border-gray-300 focus:outline-orange-200"
           type="password"
           placeholder="password"
+          onChange={handleChange}
           id="password"
         />
-        <button className="bg-orange-400 text-white p-3 rounded-lg uppercase font-bold hover:duration-500 hover:bg-orange-600 transition-colors">
-          UPDATE
+        <button
+          disabled={loading}
+          className="bg-orange-400 text-white p-3 rounded-lg uppercase font-bold hover:duration-500 hover:bg-orange-600 transition-colors"
+        >
+          {loading ? "Loading..." : "Update"}
         </button>
+        {error ? <p className="text-red-500 text-center">{error}</p> : " "}
+        {updatedSuccess && (
+          <p className=" text-green-500 text-center">Updated Successfully</p>
+        )}
       </form>
       <div className="font flex justify-between mt-3">
         <span className="text-blue-700 cursor-pointer">Sign out</span>
