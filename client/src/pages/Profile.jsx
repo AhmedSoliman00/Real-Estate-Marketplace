@@ -13,6 +13,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/user/userSlice.js";
 
 //  firebase storage
@@ -64,6 +67,25 @@ function Profile() {
       setUpdatedSuccess(true);
     } catch (err) {
       dispatch(updateUserFailure(err.message));
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+
+      dispatch(deleteUserSuccess());
+    } catch (err) {
+      dispatch(deleteUserFailure(err.message));
     }
   };
 
@@ -165,7 +187,12 @@ function Profile() {
       </form>
       <div className="font flex justify-between mt-3">
         <span className="text-blue-700 cursor-pointer">Sign out</span>
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span
+          onClick={handleDeleteUser}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete Account
+        </span>
       </div>
     </div>
   );

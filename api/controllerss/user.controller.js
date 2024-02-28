@@ -17,6 +17,9 @@ export const updateUser = async (req, res, next) => {
     if (req.body.password) {
       req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
+    const existedUserName = await User.findOne({username:req.body.username});
+    if (existedUserName)
+      return next(errorHandler(400, "Username already existed"));
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
@@ -32,6 +35,18 @@ export const updateUser = async (req, res, next) => {
 
     const { password, ...rest } = updatedUser._doc;
     return res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "you can only delete your own profile"));
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.clearCookie("access_token");
+    res.status(200).json("User has been deleted");
   } catch (error) {
     next(error);
   }
