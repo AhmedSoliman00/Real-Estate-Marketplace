@@ -11,7 +11,7 @@ import OAuth from "../components/OAuth.jsx";
 
 function SignIn() {
   const [formData, setFormData] = useState({});
-  const {loading,error} = useSelector((state) => state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   function handleChange(e) {
@@ -19,6 +19,13 @@ function SignIn() {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if email or password fields are empty
+    if (!formData.email || !formData.password) {
+      dispatch(signInFailure("Email and password fields cannot be empty"));
+      return;
+    }
+
     try {
       dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
@@ -28,17 +35,17 @@ function SignIn() {
         },
         body: JSON.stringify(formData),
       });
-      const data = await res.json(); // the data have the properties about the request i made. converted  to see it in the console
+      const data = await res.json();
       console.log(data);
 
-      if (data.success === false) {
+      if (data.success === false) { //to catch the error message from the server
         dispatch(signInFailure(data.message));
         return;
       } else {
         dispatch(signInSuccess(data));
-        navigate("/"); // to navigate to another component when finished successfully
+        navigate("/");
       }
-    } catch (error) {
+    } catch (error) { //to catch any other error during the fetch or processing of the response
       dispatch(signInFailure(error.message));
     }
   };
