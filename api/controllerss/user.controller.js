@@ -9,7 +9,7 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  // compared the decoded user id from the token with the user id from the request
+  // compared the decoded user id from the token with the user id from the request paramters
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "you can only update your own profile"));
 

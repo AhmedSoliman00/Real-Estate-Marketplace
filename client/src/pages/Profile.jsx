@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   getStorage,
   ref,
@@ -199,6 +200,12 @@ function Profile() {
         >
           {loading ? "Loading..." : "Update"}
         </button>
+        <Link
+          to={"/create-listing"}
+          className=" text-center bg-green-600 text-white p-3 rounded-lg uppercase font-bold hover:duration-500 hover:bg-green-800 transition-colors"
+        >
+          Create Listing
+        </Link>
         {error ? <p className="text-red-500 text-center">{error}</p> : " "}
         {updatedSuccess && (
           <p className=" text-green-500 text-center">Updated Successfully</p>
