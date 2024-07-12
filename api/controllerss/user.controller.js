@@ -10,6 +10,7 @@ export const test = (req, res) => {
 
 export const updateUser = async (req, res, next) => {
   // compared the decoded user id from the token with the user id from the request paramters
+  // to determine if the authenticated user is attempting to update their own information or someone else's.
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "you can only update your own profile"));
 
@@ -23,7 +24,7 @@ export const updateUser = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
-        $set: {
+        $set: { 
           username: req.body.username,
           email: req.body.email,
           password: req.body.password,
