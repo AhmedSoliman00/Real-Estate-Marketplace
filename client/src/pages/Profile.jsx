@@ -37,6 +37,8 @@ function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updatedSuccess, setUpdatedSuccess] = useState(false);
+  const [userListings, setUserListings] = useState([]);
+  const [showListingsError, setShowListingsError] = useState(false);
   console.log(filePerc);
   console.log(fileUploadError);
   console.log(formData);
@@ -94,6 +96,28 @@ function Profile() {
     }
   };
 
+  const handleShowListings = () => {
+    console.log("show listings");
+    try {
+      setShowListingsError(false);
+      fetch(`/api/user/listings/${currentUser._id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.success === false) {
+            setShowListingsError(true);
+            return;
+          }
+          setUserListings(data);
+          console.log(userListings);
+        });
+    } catch (err) {
+      {
+        setShowListingsError(true);
+      }
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
@@ -134,15 +158,15 @@ function Profile() {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, avatar: downloadURL })
+          setFormData({ ...formData, avatar: downloadURL }),
         );
-      }
+      },
     );
   };
   return (
-    <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-semibold my-7">Profile</h1>
-      <form onSubmit={handleSubmit} className="gap-4 flex flex-col">
+    <div className="mx-auto max-w-lg p-3">
+      <h1 className="my-7 text-center text-3xl font-semibold">Profile</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           onChange={(e) => setFile(e.target.files[0])}
           className="hidden"
@@ -154,11 +178,11 @@ function Profile() {
         {/*group will make all the children hovers work when the parent hovered*/}
         <img
           onClick={() => fileref.current.click()}
-          className="mb-3 flex object-cover cursor-pointer rounded-full h-24 w-24 self-center "
+          className="mb-3 flex h-24 w-24 cursor-pointer self-center rounded-full object-cover"
           src={formData.avatar || currentUser.avatar}
           alt="profile"
         />
-        <p className="text-sm self-center">
+        <p className="self-center text-sm">
           {fileUploadError ? (
             <span className="text-red-700">
               Error Image upload (image must be less than 2 mb)
@@ -172,7 +196,7 @@ function Profile() {
           )}
         </p>
         <input
-          className="p-3 rounded-lg border border-gray-300 focus:outline-orange-200 outline-1"
+          className="rounded-lg border border-gray-300 p-3 outline-1 focus:outline-orange-200"
           type="text"
           defaultValue={currentUser.username}
           onChange={handleChange}
@@ -180,7 +204,7 @@ function Profile() {
           id="username"
         />
         <input
-          className="p-3 rounded-lg border border-gray-300 focus:outline-orange-200"
+          className="rounded-lg border border-gray-300 p-3 focus:outline-orange-200"
           type="email"
           defaultValue={currentUser.email}
           onChange={handleChange}
@@ -188,7 +212,7 @@ function Profile() {
           id="email"
         />
         <input
-          className="p-3 rounded-lg border border-gray-300 focus:outline-orange-200"
+          className="rounded-lg border border-gray-300 p-3 focus:outline-orange-200"
           type="password"
           placeholder="password"
           onChange={handleChange}
@@ -196,31 +220,70 @@ function Profile() {
         />
         <button
           disabled={loading}
-          className="bg-orange-400 text-white p-3 rounded-lg uppercase font-bold hover:duration-500 hover:bg-orange-600 transition-colors"
+          className="rounded-lg bg-orange-400 p-3 font-bold uppercase text-white transition-colors hover:bg-orange-600 hover:duration-500"
         >
           {loading ? "Loading..." : "Update"}
         </button>
         <Link
           to={"/create-listing"}
-          className=" text-center bg-green-600 text-white p-3 rounded-lg uppercase font-bold hover:duration-500 hover:bg-green-800 transition-colors"
+          className="rounded-lg bg-green-600 p-3 text-center font-bold uppercase text-white transition-colors hover:bg-green-800 hover:duration-500"
         >
           Create Listing
         </Link>
-        {error ? <p className="text-red-500 text-center">{error}</p> : " "}
+        {error ? <p className="text-center text-red-500">{error}</p> : " "}
         {updatedSuccess && (
-          <p className=" text-green-500 text-center">Updated Successfully</p>
+          <p className="text-center text-green-500">Updated Successfully</p>
         )}
       </form>
-      <div className="font flex justify-between mt-3">
-        <span onClick={handleSignOut} className="text-blue-700 cursor-pointer">
+      <div className="font mt-3 flex justify-between">
+        <span onClick={handleSignOut} className="cursor-pointer text-blue-700">
           Sign out
         </span>
+        <button className="text-green-600" onClick={handleShowListings}>
+          Show Listings
+        </button>
         <span
           onClick={handleDeleteUser}
-          className="text-red-700 cursor-pointer"
+          className="cursor-pointer text-red-700"
         >
-          Delete Account
+          Delete Acc
         </span>
+        {showListingsError && (
+          <p className="text-red-500">Error showing listings</p>
+        )}
+      </div>
+      <div>
+        {userListings.length > 0 ? (
+          <>
+            <h1 className="text-center text-lg uppercase my-4">your listings</h1>
+            {userListings.map((listing) => (
+              <div
+                key={listing._id}
+                className="m-3 flex items-center justify-between rounded-lg border p-3"
+              >
+                <Link to={`/listing/${listing._id}`}>
+                  <img
+                    className="h-20 w-20 rounded-md object-cover"
+                    src={listing.imageUrls[0]}
+                    alt="listing"
+                  />
+                </Link>
+                <Link
+                  className="flex-0.25 truncate text-sm font-bold text-slate-700"
+                  to={`/listing/${listing._id}`}
+                >
+                  <p>{listing.name}</p>
+                </Link>
+                <div className="flex flex-col gap-1">
+                  <button className="small-btn p-1">Delete</button>
+                  <button className="small-btn text-green-700 hover:bg-green-700">
+                    Edit
+                  </button>
+                </div>
+              </div>
+            ))}
+          </>
+        ): <p className="text-center text-lg my-5">you dont have any listings</p>}
       </div>
     </div>
   );

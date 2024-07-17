@@ -56,7 +56,7 @@ function CreateListing() {
       if (data.success === false) {
         setError(data.message);
       }
-      console.log(data.data)
+      console.log(data.data);
       navigate(`/listing/${data.data._id}`);
     } catch (error) {
       setError(error.message);
@@ -289,7 +289,10 @@ function CreateListing() {
                 value={formData.regularPrice}
               />
               <p>Regular price</p>
-              <span className="text-sm"> {formData.type === 'rent' ? '($/month)' : ''}</span>
+              <span className="text-sm">
+                {" "}
+                {formData.type === "rent" ? "($/month)" : ""}
+              </span>
             </div>
             {formData.offer && (
               <div className="flex items-center gap-2">
@@ -305,7 +308,9 @@ function CreateListing() {
                 />
                 <div className="flex flex-col items-center">
                   <p>Discounted price</p>
-                  <span className="text-xs">{formData.type === 'rent' ? '($/month)' : ''}</span>
+                  <span className="text-xs">
+                    {formData.type === "rent" ? "($/month)" : ""}
+                  </span>
                 </div>
               </div>
             )}
@@ -351,7 +356,7 @@ function CreateListing() {
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(index)}
-                  className="p-0.1 my-2 rounded-lg border border-blue-950 font-bold text-red-500 transition duration-200 ease-in hover:translate-y-1 hover:border-none hover:bg-red-700 hover:text-white hover:opacity-80"
+                  className="small-btn"
                 >
                   Delete
                 </button>
