@@ -118,7 +118,6 @@ function Profile() {
     }
   };
 
-
   const handleListingDelete = async (id) => {
     try {
       const res = await fetch(`/api/user/listings/delete/${id}`, {
@@ -133,8 +132,7 @@ function Profile() {
     } catch (error) {
       console.log(error);
     }
-  }
-
+  };
 
   const handleSignOut = async () => {
     try {
@@ -273,7 +271,9 @@ function Profile() {
       <div>
         {userListings.length > 0 ? (
           <>
-            <h1 className="text-center text-lg uppercase my-4">your listings</h1>
+            <h1 className="my-4 text-center text-lg uppercase">
+              your listings
+            </h1>
             {userListings.map((listing) => (
               <div
                 key={listing._id}
@@ -293,15 +293,24 @@ function Profile() {
                   <p>{listing.name}</p>
                 </Link>
                 <div className="flex flex-col gap-1">
-                  <button className="small-btn p-1" onClick={()=> handleListingDelete(listing._id)}>Delete</button>
-                  <button className="small-btn text-green-700 hover:bg-green-700">
-                    Edit
+                  <button
+                    className="small-btn p-1"
+                    onClick={() => handleListingDelete(listing._id)}
+                  >
+                    Delete
                   </button>
+                  <Link to={`/update-listing/${listing._id}`}>
+                    <button className="small-btn text-green-700 hover:bg-green-700">
+                      Edit
+                    </button>
+                  </Link>
                 </div>
               </div>
             ))}
           </>
-        ): <p className="text-center text-lg my-5">you dont have any listings</p>}
+        ) : (
+          <p className="my-5 text-center text-lg">you dont have any listings</p>
+        )}
       </div>
     </div>
   );
