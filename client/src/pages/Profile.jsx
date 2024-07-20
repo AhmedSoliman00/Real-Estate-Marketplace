@@ -118,6 +118,24 @@ function Profile() {
     }
   };
 
+
+  const handleListingDelete = async (id) => {
+    try {
+      const res = await fetch(`/api/user/listings/delete/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      setUserListings(userListings.filter((listing) => listing._id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
@@ -275,7 +293,7 @@ function Profile() {
                   <p>{listing.name}</p>
                 </Link>
                 <div className="flex flex-col gap-1">
-                  <button className="small-btn p-1">Delete</button>
+                  <button className="small-btn p-1" onClick={()=> handleListingDelete(listing._id)}>Delete</button>
                   <button className="small-btn text-green-700 hover:bg-green-700">
                     Edit
                   </button>

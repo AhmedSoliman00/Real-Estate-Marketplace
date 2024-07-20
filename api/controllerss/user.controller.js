@@ -64,3 +64,24 @@ export const getUserListings = async (req, res, next) => {
     next(error)
   }
 }
+
+export const deleteUserListing = async (req, res, next) => {
+  try {
+    const listing = await Listing.findById(req.params.id)
+    if (!listing) return next(errorHandler(404, 'Listing not found'))
+    if (req.user.id !== listing.userRef)
+      return next(
+        errorHandler(401, 'You are not authorized to delete this listing')
+      )
+
+    await Listing.findByIdAndDelete(req.params.id)
+    return res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: 'Listing deleted successfully',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
