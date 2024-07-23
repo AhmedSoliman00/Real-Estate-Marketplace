@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getDownloadURL,
   getStorage,
+  list,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
@@ -165,7 +166,7 @@ export default function CreateListing() {
       if (data.success === false) {
         setError(data.message);
       }
-      navigate(`/listing/${data._id}`);
+      navigate(`/listing/${params.listingId}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
