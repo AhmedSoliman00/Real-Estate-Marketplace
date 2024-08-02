@@ -2,6 +2,7 @@ import bcryptjs from 'bcryptjs'
 import User from '../models/user.model.js'
 import { errorHandler } from '../utils/error.js'
 import Listing from '../models/listing.model.js'
+import mongoose from 'mongoose'
 
 export const test = (req, res) => {
   res.json({
@@ -85,3 +86,19 @@ export const deleteUserListing = async (req, res, next) => {
   }
 }
 
+export const getUserById = async (req, res, next) => {
+  const { id } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return next(errorHandler(400, 'Invalid User ID'))
+  }
+
+  try {
+    const user = await User.findById(id)
+    if (!user) return next(errorHandler(404, 'User not found'))
+    const { password: pass, ...rest } = user._doc
+    res.status(200).json(rest)
+  } catch (error) {
+    next(error)
+  }
+}
