@@ -50,7 +50,14 @@ export default function Search() {
     const fetchListings = async () => {
       setLoading(true);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/listing/get?${searchQuery}`);
+      const res = await fetch(`/api/listing/search?${searchQuery}`,{
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      console.log('Response Status:', res.status);
+      console.log('Response Headers:', res.headers);
       const data = await res.json();
       setListings(data);
       setLoading(false);
