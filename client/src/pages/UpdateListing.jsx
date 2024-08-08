@@ -375,7 +375,7 @@ export default function CreateListing() {
             disabled={loading || uploading}
             className="rounded-lg bg-slate-700 p-3 uppercase text-white hover:opacity-95 disabled:opacity-80"
           >
-            {loading ? "Creating..." : "Update listing"}
+            {loading ? "Updating..." : "Update listing"}
           </button>
           {error && <p className="text-sm text-red-700">{error}</p>}
         </div>
