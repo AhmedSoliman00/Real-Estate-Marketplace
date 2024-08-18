@@ -1,0 +1,58 @@
+{
+  "$schema": "https://cdn.statically.io/gh/nguyenngoclongdev/cdn/main/schema/v10/terminal-keeper.json",
+  "theme": "tribe",
+  "active": "default",
+  "activateOnStartup": true,
+  "keepExistingTerminals": false,
+  "sessions": {
+    "default": [
+      {
+        "name": "real-estate",
+        "autoExecuteCommands": true,
+        "icon": "person",
+        "color": "terminal.ansiGreen",
+        "commands": [
+          "echo welcome to real-estate project"
+        ]
+      },
+      [
+        {
+          "name": "client",
+          "autoExecuteCommands": true,
+          "commands": [
+            "cd client && npm run dev"
+          ]
+        },
+        {
+          "name": "api",
+          "autoExecuteCommands": true,
+          "commands": [
+            "cd api && npm run dev"
+          ]
+        }
+      ],
+      [
+        {
+          "name": "git",
+          "commands": [
+            "git status, git add ., git commit -m , git push","git checkout -b feature-name"
+          ]
+        },
+        {
+          "name": "docker",
+          "commands": [
+            "docker-compose up"
+          ]
+        }
+      ]
+    ],
+    "saved-session": [
+      {
+        "name": "connect",
+        "commands": [
+          ""
+        ]
+      }
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 import express from "express";
-import { createListing,updateListing,getListing,searchListing } from "../controllerss/createListing.controller.js";
+import { createListing,updateListing,getListing,searchListing } from "../controllerss/listing.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
 

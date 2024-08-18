@@ -11,10 +11,10 @@ body {
 @layer components {
   .small-btn {
     --hover-bg-color: #be123c; /* Default hover background color (red-700) */
-    @apply p-0.1 my-2 rounded-lg border border-blue-950 font-bold text-red-500 transition duration-200 ease-in;
+    @apply p-0.1 my-2 rounded-lg border border-blue-950 font-bold text-red-500 transition duration-200 ease-in w-20;
   }
   .small-btn:hover {
-    @apply hover:translate-y-1 hover:border-none hover:text-white hover:opacity-80;
+    @apply hover:translate-y-0.5 hover:border-none hover:text-white hover:opacity-80;
     background-color: var(--hover-bg-color);
   }
 }
