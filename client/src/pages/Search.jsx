@@ -27,7 +27,7 @@ export default function Search() {
     const searchQuery = urlParams.toString();
     const res = await fetch(`/api/listing/search?${searchQuery}`);
     const data = await res.json();
-    if (data.length < 8) {
+    if (data.length < 7) {
       setShowMore(false);
     }
     setListings([...listings, ...data]);
